@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      :root { background: #101318; color: #eaf1ff; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      * { box-sizing: border-box; }
+      html, body, #app { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+      body { background: #101318; }
+      #game { display: block; width: 100vw; height: 100vh; background: #101318; }
+      .hidden { display: none !important; }
+      .overlay-panel { position: fixed; inset: 0; display: grid; place-items: center; align-content: center; gap: 1.4rem; padding: 2rem; text-align: center; background: linear-gradient(180deg, rgba(16, 19, 24, 0.55), rgba(16, 19, 24, 0.92)); z-index: 5; }
+    </style>
+    <link rel="stylesheet" href="/src/style.css" />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="%23101318"/><path d="M14 36h36v8H14zM22 20h20v8H22z" fill="%23f7c95f"/></svg>' />
+    <title>Neon Sector FPS</title>
+  </head>
+  <body>
+    <main id="app">
+      <canvas id="game"></canvas>
+
+      <section id="start-screen" class="overlay-panel">
+        <div class="brand-lockup">
+          <span class="kicker">Three.js FPS</span>
+          <h1>Neon Sector</h1>
+          <p>Survive the patrol surge across a dense city grid.</p>
+        </div>
+        <button id="start-button" type="button">Start Mission</button>
+      </section>
+
+      <section id="pause-screen" class="overlay-panel hidden">
+        <div>
+          <span class="kicker">Paused</span>
+          <h2>Mission Suspended</h2>
+        </div>
+        <button id="resume-button" type="button">Resume</button>
+      </section>
+
+      <section id="game-over-screen" class="overlay-panel hidden">
+        <div>
+          <span class="kicker">Signal Lost</span>
+          <h2>Squad Down</h2>
+          <p id="final-score"></p>
+        </div>
+        <button id="restart-button" type="button">Redeploy</button>
+      </section>
+
+      <div id="hud" class="hidden">
+        <div id="status-bar">
+          <div class="meter-group">
+            <span id="health-label">Health 100</span>
+            <div class="meter"><div id="health-fill"></div></div>
+          </div>
+          <div class="meter-group">
+            <span id="armor-label">Armor 35</span>
+            <div class="meter"><div id="armor-fill"></div></div>
+          </div>
+          <div class="readout"><span id="wave">Wave 1</span></div>
+          <div class="readout"><span id="score">Score 0</span></div>
+        </div>
+
+        <div id="crosshair" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <div id="hitmarker" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <div id="scope-overlay" aria-hidden="true">
+          <div class="scope-glass">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+
+        <div id="damage-vignette"></div>
+
+        <div id="weapon-panel">
+          <div id="weapon-name">Pistol</div>
+          <div id="ammo">12 / 72</div>
+          <div id="reload-meter" aria-hidden="true"><span></span></div>
+          <div id="weapon-slots">
+            <span class="active">1 Pistol</span>
+            <span>2 Rifle</span>
+            <span>3 Shotgun</span>
+            <span>4 SMG</span>
+            <span>5 Marksman</span>
+            <span>6 Railgun</span>
+          </div>
+        </div>
+
+        <div id="notice"></div>
+      </div>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

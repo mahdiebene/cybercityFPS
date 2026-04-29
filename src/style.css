@@ -1,0 +1,539 @@
+:root {
+  color: #eaf1ff;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background: #101318;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+button {
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 6px;
+  padding: 0.78rem 1.1rem;
+  color: #101318;
+  background: #d4a85c;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.22);
+}
+
+button:hover,
+button:focus-visible {
+  background: #e4bd77;
+  outline: none;
+}
+
+#game {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  background: #101318;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.overlay-panel {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 1.4rem;
+  padding: 2rem;
+  text-align: center;
+  background:
+    linear-gradient(180deg, rgba(8, 10, 12, 0.62), rgba(8, 10, 12, 0.94)),
+    radial-gradient(circle at 50% 28%, rgba(160, 170, 176, 0.14), transparent 34%);
+  z-index: 5;
+}
+
+.brand-lockup {
+  max-width: min(42rem, 88vw);
+}
+
+.kicker {
+  display: inline-block;
+  margin-bottom: 0.7rem;
+  color: #d4a85c;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(3.2rem, 9vw, 7rem);
+  line-height: 0.9;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+h2 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+p {
+  margin-top: 0.75rem;
+  color: rgba(234, 241, 255, 0.76);
+  font-size: clamp(1rem, 2.2vw, 1.25rem);
+}
+
+#hud {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+#hud::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background:
+    radial-gradient(circle at center, transparent 56%, rgba(0, 0, 0, 0.15)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(0, 0, 0, 0.026));
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+#status-bar {
+  position: absolute;
+  left: max(1rem, env(safe-area-inset-left));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  display: grid;
+  width: min(22rem, calc(48vw - 1.5rem));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+#status-bar,
+#weapon-panel,
+#notice,
+#hitmarker {
+  z-index: 2;
+}
+
+.meter-group,
+.readout,
+#weapon-panel {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 4px;
+  background:
+    linear-gradient(90deg, rgba(9, 13, 16, 0.88), rgba(9, 13, 16, 0.58)),
+    rgba(7, 10, 13, 0.72);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(8px);
+}
+
+.meter-group {
+  display: grid;
+  grid-column: 1 / -1;
+  gap: 0.36rem;
+  min-width: 0;
+  padding: 0.55rem 0.68rem 0.62rem;
+  color: rgba(234, 241, 255, 0.82);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.meter {
+  height: 0.42rem;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.meter > div {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  transition: width 120ms ease-out;
+}
+
+#health-fill {
+  background: linear-gradient(90deg, #ed4f5d, #ff7a70);
+  box-shadow: 0 0 16px rgba(239, 98, 98, 0.3);
+}
+
+#armor-fill {
+  background: linear-gradient(90deg, #7da6b2, #b6d3dc);
+  box-shadow: 0 0 14px rgba(125, 166, 178, 0.28);
+}
+
+.readout {
+  display: grid;
+  min-width: 0;
+  place-items: center;
+  padding: 0.48rem 0.54rem;
+  color: rgba(244, 248, 255, 0.92);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+#crosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  --spread: 0px;
+  width: 3rem;
+  height: 3rem;
+  transform: translate(-50%, -50%);
+  transition: transform 120ms ease-out;
+}
+
+#crosshair span {
+  position: absolute;
+  display: block;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 0 8px rgba(212, 168, 92, 0.42);
+  transition:
+    top 120ms ease-out,
+    bottom 120ms ease-out,
+    left 120ms ease-out,
+    right 120ms ease-out,
+    opacity 120ms ease-out;
+}
+
+#crosshair span:nth-child(1),
+#crosshair span:nth-child(2) {
+  left: 50%;
+  width: 0.12rem;
+  height: 0.68rem;
+  transform: translateX(-50%);
+}
+
+#crosshair span:nth-child(1) {
+  top: calc(0.24rem - var(--spread));
+}
+
+#crosshair span:nth-child(2) {
+  bottom: calc(0.24rem - var(--spread));
+}
+
+#crosshair span:nth-child(3),
+#crosshair span:nth-child(4) {
+  top: 50%;
+  width: 0.68rem;
+  height: 0.12rem;
+  transform: translateY(-50%);
+}
+
+#crosshair span:nth-child(3) {
+  left: calc(0.24rem - var(--spread));
+}
+
+#crosshair span:nth-child(4) {
+  right: calc(0.24rem - var(--spread));
+}
+
+#hud.ads #crosshair {
+  transform: translate(-50%, -50%) scale(0.72);
+}
+
+#hud.ads #crosshair span:nth-child(1) {
+  top: calc(0.62rem - var(--spread) * 0.35);
+}
+
+#hud.ads #crosshair span:nth-child(2) {
+  bottom: calc(0.62rem - var(--spread) * 0.35);
+}
+
+#hud.ads #crosshair span:nth-child(3) {
+  left: calc(0.62rem - var(--spread) * 0.35);
+}
+
+#hud.ads #crosshair span:nth-child(4) {
+  right: calc(0.62rem - var(--spread) * 0.35);
+}
+
+#scope-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  z-index: 1;
+  transition: opacity 110ms ease-out;
+  pointer-events: none;
+}
+
+#hud.scoped #scope-overlay {
+  opacity: var(--scope-opacity, 1);
+}
+
+#hud.scoped #crosshair {
+  opacity: 0;
+}
+
+.scope-glass {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background:
+    radial-gradient(circle at center, transparent 0 35%, rgba(0, 0, 0, 0.28) 72%, rgba(0, 0, 0, 0.62)),
+    linear-gradient(180deg, rgba(190, 215, 220, 0.045), rgba(0, 0, 0, 0.04));
+  box-shadow:
+    inset 0 0 7rem rgba(0, 0, 0, 0.44);
+}
+
+.scope-glass span {
+  position: absolute;
+  display: block;
+  background: rgba(230, 238, 240, 0.78);
+}
+
+.scope-glass span:nth-child(1),
+.scope-glass span:nth-child(2) {
+  left: 50%;
+  width: 0.08rem;
+  height: 22%;
+  transform: translateX(-50%);
+}
+
+.scope-glass span:nth-child(1) {
+  top: 24%;
+}
+
+.scope-glass span:nth-child(2) {
+  bottom: 24%;
+}
+
+.scope-glass span:nth-child(3),
+.scope-glass span:nth-child(4) {
+  top: 50%;
+  width: 22%;
+  height: 0.08rem;
+  transform: translateY(-50%);
+}
+
+.scope-glass span:nth-child(3) {
+  left: 24%;
+}
+
+.scope-glass span:nth-child(4) {
+  right: 24%;
+}
+
+#hitmarker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2rem;
+  height: 2rem;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.78);
+  transition:
+    opacity 70ms ease-out,
+    transform 120ms ease-out;
+}
+
+#hitmarker span {
+  position: absolute;
+  width: 0.58rem;
+  height: 0.14rem;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+#hitmarker span:nth-child(1) {
+  top: 0.28rem;
+  left: 0.22rem;
+  transform: rotate(45deg);
+}
+
+#hitmarker span:nth-child(2) {
+  top: 0.28rem;
+  right: 0.22rem;
+  transform: rotate(-45deg);
+}
+
+#hitmarker span:nth-child(3) {
+  bottom: 0.28rem;
+  left: 0.22rem;
+  transform: rotate(-45deg);
+}
+
+#hitmarker span:nth-child(4) {
+  right: 0.22rem;
+  bottom: 0.28rem;
+  transform: rotate(45deg);
+}
+
+#hitmarker.active {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+#hitmarker.headshot span {
+  background: #d4a85c;
+  box-shadow: 0 0 14px rgba(212, 168, 92, 0.76);
+}
+
+#weapon-panel {
+  position: absolute;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  display: grid;
+  width: min(21.5rem, calc(50vw - 1.5rem));
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 0.9rem;
+  row-gap: 0.45rem;
+  padding: 0.72rem;
+  border-left: 3px solid rgba(212, 168, 92, 0.78);
+}
+
+#weapon-name {
+  align-self: end;
+  overflow: hidden;
+  color: rgba(244, 248, 255, 0.96);
+  font-size: clamp(1.05rem, 2vw, 1.55rem);
+  font-weight: 1000;
+  line-height: 0.96;
+  text-transform: uppercase;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#ammo {
+  align-self: end;
+  margin-top: 0;
+  color: #d4a85c;
+  font-size: clamp(1.05rem, 2.2vw, 1.45rem);
+  font-weight: 900;
+  line-height: 1;
+  text-align: right;
+  white-space: nowrap;
+}
+
+#reload-meter {
+  grid-column: 1 / -1;
+  overflow: hidden;
+  height: 0.18rem;
+  margin-top: 0.05rem;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  transition: opacity 120ms ease-out;
+}
+
+#reload-meter span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #d4a85c, #eef2f3);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+#weapon-panel.reloading #reload-meter {
+  opacity: 1;
+}
+
+#weapon-slots {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.28rem;
+  margin-top: 0.08rem;
+}
+
+#weapon-slots span {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 3px;
+  padding: 0.32rem 0.2rem;
+  color: rgba(234, 241, 255, 0.72);
+  font-size: 0.57rem;
+  font-weight: 900;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#weapon-slots span.active {
+  border-color: rgba(212, 168, 92, 0.78);
+  color: #101318;
+  background: #d4a85c;
+}
+
+#notice {
+  position: absolute;
+  bottom: max(7.8rem, calc(env(safe-area-inset-bottom) + 7.8rem));
+  left: max(1.05rem, env(safe-area-inset-left));
+  width: min(30rem, calc(100vw - 2rem));
+  color: rgba(234, 241, 255, 0.78);
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+  text-transform: uppercase;
+}
+
+#damage-vignette {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(circle at center, transparent 44%, rgba(239, 98, 98, 0.45));
+  transition: opacity 130ms ease-out;
+}
+
+#damage-vignette.flash {
+  opacity: 1;
+}
+
+@media (max-width: 760px) {
+  #status-bar {
+    grid-template-columns: 1fr 1fr;
+    top: max(3.65rem, env(safe-area-inset-top));
+    bottom: auto;
+    width: min(23rem, calc(100vw - 1.5rem));
+  }
+
+  .readout {
+    min-height: 2.3rem;
+  }
+
+  #weapon-panel {
+    left: 50%;
+    right: auto;
+    width: min(23rem, calc(100vw - 2rem));
+    transform: translateX(-50%);
+  }
+
+  #notice {
+    bottom: 8.8rem;
+    font-size: 0.78rem;
+  }
+}
