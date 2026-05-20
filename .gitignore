@@ -2,3 +2,13 @@ node_modules/
 dist/
 vite*.log
 verification-*.png
+
+# Ignore source assets locally from Git without deleting them
+public/assets/textures/pbr/downloads/
+public/assets/vendor/
+!public/assets/vendor/kenney_animated-characters-2/
+public/assets/vendor/kenney_animated-characters-2/*
+!public/assets/vendor/kenney_animated-characters-2/Animations/
+public/assets/vendor/kenney_animated-characters-2/Animations/*
+!public/assets/vendor/kenney_animated-characters-2/Animations/idle.fbx
+!public/assets/vendor/kenney_animated-characters-2/Animations/run.fbx
