@@ -4,6 +4,8 @@
 
 **A high-octane browser-based first-person shooter prototype built with Three.js and Vite.**
 
+### [🚀 Play Live Demo on Vercel](https://cybercity-fps.vercel.app/)
+
 [![Built with Three.js](https://img.shields.io/badge/Three.js-black?style=for-the-badge&logo=three.js&logoColor=white)](https://threejs.org/)
 [![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)](https://vitejs.dev/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
